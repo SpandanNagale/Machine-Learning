@@ -4,6 +4,7 @@ import os
 import dill
 import pandas as pd
 from src.exception import CustomException
+from sklearn.metrics import r2_score 
 
 def saved_obj(file_path,obj):
     try:
@@ -14,3 +15,19 @@ def saved_obj(file_path,obj):
     except Exception as e:
         raise CustomException(e,sys)
 
+def evaluate_model(x_train,y_train,x_test,y_test,models):
+    try:
+        report={}
+        for i in range(len(list(models))):
+            model=list(models.values())[i]
+            model.fit(x_train,y_train)
+            y_pred=model.predict(x_test)
+            score=r2_score(y_test,y_pred)
+
+            report[list(models.keys())[i]]=score
+
+        return report
+
+    except Exception as e:
+
+        raise CustomException(e,sys)
